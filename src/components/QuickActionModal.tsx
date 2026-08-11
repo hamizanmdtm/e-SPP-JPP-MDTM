@@ -43,6 +43,13 @@ export const QuickActionModal: React.FC = () => {
       desc: 'Tugaskan arahan kerja harian kepada pegawai mengikut seksyen.',
       icon: CheckSquare,
       color: 'bg-purple-50 hover:bg-purple-100 text-purple-700 border-purple-200'
+    },
+    {
+      id: 'directory',
+      title: 'Daftar / Kemaskini Staf & Penama',
+      desc: 'Tambah, ubah nama, jawatan, atau status staf Jabatan MDTM.',
+      icon: PlusCircle,
+      color: 'bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200'
     }
   ];
 

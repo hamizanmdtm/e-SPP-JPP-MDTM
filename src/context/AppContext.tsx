@@ -47,6 +47,10 @@ interface AppContextType {
   setPrintModalOpen: (open: boolean) => void;
 
   // Handlers
+  addStaff: (staff: Omit<Staff, 'id'>) => void;
+  updateStaff: (id: string, updated: Partial<Staff>) => void;
+  deleteStaff: (id: string) => void;
+
   addMovement: (movement: Omit<StaffMovement, 'id'>) => void;
   updateMovementStatus: (id: string, status: StaffMovement['status']) => void;
   deleteMovement: (id: string) => void;
@@ -157,6 +161,57 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [notifications]);
 
   // Actions
+  const addStaff = (newStaff: Omit<Staff, 'id'>) => {
+    const id = `STF-${String(staffList.length + 1).padStart(3, '0')}`;
+    const created: Staff = { ...newStaff, id };
+    setStaffList((prev) => [...prev, created]);
+
+    const ntf: NotificationItem = {
+      id: `NTF-${Date.now()}`,
+      title: 'Staf Baharu Didaftarkan',
+      message: `${newStaff.name} (${newStaff.position}) telah ditambah ke dalam sistem.`,
+      type: 'info',
+      timestamp: 'Baru sahaja',
+      read: false
+    };
+    setNotifications((prev) => [ntf, ...prev]);
+  };
+
+  const updateStaff = (id: string, updated: Partial<Staff>) => {
+    setStaffList((prev) =>
+      prev.map((s) => {
+        if (s.id === id) {
+          const updatedStaff = { ...s, ...updated };
+          if (currentUser.id === id) {
+            setCurrentUser(updatedStaff);
+          }
+          return updatedStaff;
+        }
+        return s;
+      })
+    );
+
+    // Sync staff name in movements, tasks, letters if updated.name changed
+    if (updated.name) {
+      setMovements((prev) =>
+        prev.map((m) => (m.staffId === id ? { ...m, staffName: updated.name! } : m))
+      );
+      setTasks((prev) =>
+        prev.map((t) => (t.assignedStaffId === id ? { ...t, assignedStaffName: updated.name! } : t))
+      );
+      setLetters((prev) =>
+        prev.map((l) => (l.assignedStaffId === id ? { ...l, assignedStaffName: updated.name! } : l))
+      );
+      setProjects((prev) =>
+        prev.map((p) => (p.leadStaffId === id ? { ...p, leadStaffName: updated.name! } : p))
+      );
+    }
+  };
+
+  const deleteStaff = (id: string) => {
+    setStaffList((prev) => prev.filter((s) => s.id !== id));
+  };
+
   const addMovement = (newMvt: Omit<StaffMovement, 'id'>) => {
     const id = `MVT-2026-${String(movements.length + 1).padStart(3, '0')}`;
     const created: StaffMovement = { ...newMvt, id };
@@ -377,6 +432,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setQuickActionOpen,
         isPrintModalOpen,
         setPrintModalOpen,
+        addStaff,
+        updateStaff,
+        deleteStaff,
         addMovement,
         updateMovementStatus,
         deleteMovement,
