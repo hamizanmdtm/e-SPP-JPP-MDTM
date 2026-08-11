@@ -1,0 +1,6 @@
+{
+  "name": "e-SPP MDTM - Sistem Pengurusan Pentadbiran Jabatan Perancangan & Pembangunan",
+  "description": "Sistem Pengurusan Pentadbiran Berpusat Majlis Daerah Tanah Merah mengintegrasikan Pergerakan Staf, Kenderaan, Surat-Menyurat, Tugasan Harian & Milestone Projek.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
